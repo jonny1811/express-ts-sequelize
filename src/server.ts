@@ -1,12 +1,12 @@
-import db from "./config/database.config";
-import app from "./app";
+import env from './config/env';
+import dbInit from "./db/init";
 
-db.sync().then(() => {
-	console.log("connect to db");
-});
+dbInit();
 
-const port = 9000;
+export const start = async () => {
+	const { setupApp } = await import('./config/app');
+	const app = await setupApp();
+	app.listen(env.port, () => console.log(`Server runnning at http://localhost:${env.port}`));
+}
 
-app.listen(port, () => {
-	console.log("server is running on port " + port);
-});
+start();

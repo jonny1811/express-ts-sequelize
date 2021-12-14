@@ -1,24 +1,28 @@
 import { body, param, query } from 'express-validator';
 
-class TodoValidator {
-	checkCreateTodo() {
+class UsersValidator {
+	checkCreateUsers() {
 		return [
 			body('id')
 				.optional()
 				.isUUID(4)
 				.withMessage('The value should be UUID v4'),
-			body('title')
+			body('name')
 				.notEmpty()
 				.withMessage('The title value should not be empty'),
-			body('completed')
-				.optional()
-				.isBoolean()
-				.withMessage('The value should be boolean')
-				.isIn([0, false])
-				.withMessage('The value should be 0 or false'),
+			body('email')
+				.isEmail()
+				.withMessage('The value should be email')
+				.notEmpty()
+				.withMessage('The email value should not be empty'),
+			body('password')
+				.isStrongPassword()
+				.withMessage('The value should be strong')
+				.notEmpty()
+				.withMessage('The password value should not be empty'),
 		];
 	}
-	checkReadTodo() {
+	checkReadUsers() {
 		return [
 			query('limit')
 				.optional()
@@ -41,4 +45,4 @@ class TodoValidator {
 	}
 }
 
-export default new TodoValidator();
+export default new UsersValidator();
