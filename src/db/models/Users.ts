@@ -4,6 +4,7 @@ import sequelizeConnection from '../../config/database.config';
 interface UsersModel {
 	id: string;
 	name?: string;
+	type: string;
 	password: string;
 	email: string;
 }
@@ -18,6 +19,10 @@ Users.init(
 			allowNull: false,
 		},
 		name: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		type: {
 			type: DataTypes.STRING,
 			allowNull: true,
 		},

@@ -19,23 +19,21 @@ class UsersController {
 		return UsersController._user;
 	}
 
-	async register({ name, email, password }: UserAddModel) {
+	async register({ name, email, password, type }: UserAddModel) {
 		const id = uuidv4();
 		const hash = await bcrypt.hash(password, this._saltRounds);
-		return await Users.create({ name, email, password: hash, id });
+		return await Users.create({ name, email, password: hash, id, type });
 	}
 
-	async login({ email }: UserAddModel) {
-		const u = await Users.findOne({ where: { email } }) as Users;
-		const userData = u.toJSON() as UserViewModel;
-		const id = userData.id;
-		const usrEmail = userData.email;
-		const name = userData.name
+	async login(userAddModel: UserAddModel) {
+		const u = await Users.findOne({ where: { email: userAddModel.email } }) as Users;
+		const { id, email, name, type } = u.toJSON() as UserViewModel;
 		return { 
-			token: jwt.sign({ id, email: usrEmail }, this._jwtSecret, { expiresIn: '24h' }),
+			token: jwt.sign({ id, email }, this._jwtSecret, { expiresIn: '24h' }),
 			id,
-			email: usrEmail,
-			name
+			email,
+			name,
+			type
 		};
 	}
 
@@ -56,11 +54,11 @@ class UsersController {
 
 	async create(req: Request, res: Response) {
 		const id = uuidv4();
-		const { name, email, password } = req.body;
+		const { name, email, password, type } = req.body;
 		const hash = await bcrypt.hash(password, 12);
 		
 		try {
-			const data = await Users.create({ name, email, password: hash, id });
+			const data = await Users.create({ name, email, password: hash, id, type });
 			return res.json({ data, ok: true });
 		} catch (e) {
 			return res.json({ msg: "fail to create", status: 500, route: "/create" });
