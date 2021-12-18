@@ -1,13 +1,17 @@
 import * as bcrypt from 'bcrypt'
 import { check } from 'express-validator'
+import { is } from 'sequelize/types/lib/operators';
 import { Users } from '../models/index';
 
 export const loginValidator = {
   forRegister: [
     check('name')
-      .isString().withMessage('Name cant be empty field'),
+      .optional()
+      .notEmpty()
+      .isString(),
     check('type')
-      .isString().withMessage('Type cant be empty field'),
+      .isNumeric()
+      .notEmpty(),
     check('email')
       .isEmail().withMessage('Invalid email format')
       .custom(email => Users.findAll({ where: { email } }).then(u => !!!u)).withMessage('Email exists'),
