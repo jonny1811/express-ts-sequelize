@@ -6,6 +6,8 @@ export const loginValidator = {
   forRegister: [
     check('name')
       .isString().withMessage('Name cant be empty field'),
+    check('type')
+      .isString().withMessage('Type cant be empty field'),
     check('email')
       .isEmail().withMessage('Invalid email format')
       .custom(email => Users.findAll({ where: { email } }).then(u => !!!u)).withMessage('Email exists'),
