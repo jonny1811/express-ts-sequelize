@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http';
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import UsersController from '../../api/controller/users';
+import SessionController from '../../api/controller/session';
 
 function getTokenFromHeaders(headers: IncomingHttpHeaders) {
   const header = headers.authorization as string;
@@ -15,7 +15,7 @@ function getTokenFromHeaders(headers: IncomingHttpHeaders) {
 export const tokenGuard: (() => RequestHandler) = (() => (req, res, next) => {
 
   const token = getTokenFromHeaders(req.headers) || req.query.token || req.body.token || '';
-  const hasAccess = UsersController.verifyToken(token);
+  const hasAccess = SessionController.verifyToken(token);
 
   hasAccess.then(a => {
     if (!a) {
@@ -28,7 +28,7 @@ export const tokenGuard: (() => RequestHandler) = (() => (req, res, next) => {
 class TokenGuardMiddleware {
   tokenGuard(req: Request, res: Response, next: NextFunction) {
     const token = getTokenFromHeaders(req.headers) || req.query.token || req.body.token || '';
-    const hasAccess = UsersController.verifyToken(token);
+    const hasAccess = SessionController.verifyToken(token);
 
     hasAccess.then(a => {
       if (!a) {
