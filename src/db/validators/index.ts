@@ -22,6 +22,7 @@ class UsersValidator {
 				.withMessage('The password value should not be empty'),
 		];
 	}
+	
 	checkReadUsers() {
 		return [
 			query('limit')
@@ -34,6 +35,7 @@ class UsersValidator {
 				.withMessage('The value should be number'),
 		];
 	}
+
 	checkIdParam() {
 		return [
 			param('id')
